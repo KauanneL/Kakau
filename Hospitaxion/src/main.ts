@@ -7,15 +7,16 @@ import { Sala } from "./models/Sala.js";
 const pacientes: Paciente[] = [];
 const medicos: Medico[] = [
   new Medico("Dr. Gustavo Almeida", "Cardiologista"),
+  new Medico("Dr. Tiago Varela", "Clínico Geral"),
   new Medico("Dra. Mariana Soares", "Dermatologista"),
-  new Medico("Dr. Ricardo Martins", "Neurologista"),
-  new Medico("Dra. Fernanda Oliveira", "Pediatra"),
-  new Medico("Dr. Carlos Mendes", "Ortopedista"),
+  new Medico("Dra. Ana Beatriz Costa", "Endocrinologista"),
   new Medico("Dra. Camila Santos", "Ginecologista"),
+  new Medico("Dr. Ricardo Martins", "Neurologista"),
   new Medico("Dr. João Vieira", "Oftalmologista"),
+  new Medico("Dr. Carlos Mendes", "Ortopedista"),
+  new Medico("Dra. Fernanda Oliveira", "Pediatra"),
   new Medico("Dra. Letícia Ferreira", "Psiquiatra"),
   new Medico("Dr. Pedro Rocha", "Urologista"),
-  new Medico("Dra. Ana Beatriz Costa", "Endocrinologista"),
 ];
 const consultas: Consulta[] = [];
 const prontuarios: Prontuario[] = [];
