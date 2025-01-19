@@ -23,8 +23,8 @@ const prontuarios: Prontuario[] = [];
 const salas: Sala[] = [];
 
 // RUTHYANNE 
-function validarData(data: string): boolean {
-  const [ano, mes, dia] = data.split("-").map(Number);
+function validarData(data: string): boolean {  // indica se a data é válida ou não 
+  const [ano, mes, dia] = data.split("-").map(Number); 
 
 
   if (ano < 2025) return false;
@@ -32,8 +32,8 @@ function validarData(data: string): boolean {
   if (dia < 1 || dia > 31) return false;
 
   
-  const ultimoDiaMes = new Date(ano, mes, 0).getDate(); 
-  return dia <= ultimoDiaMes;
+  const ultimoDiaMes = new Date(ano, mes, 0).getDate(); // calcula o último dia do mês para o ano e mês colocados 
+  return dia <= ultimoDiaMes; // verifica se o dia informado é menor ou igual ao último dia do mês
 }
 
 // KAUANNE 
@@ -101,16 +101,17 @@ document.getElementById("pacienteForm")?.addEventListener("submit", (event) => {
 
 // RUTHYANNE 
 function exibirPacientes() {
+  // procura o ID no HTML, esse é o local onde a lista de pacientes será exibida
   const pacienteList = document.getElementById("pacienteList")!;
   pacienteList.innerHTML = pacientes
-    .map((p) => `<p>${p.nome} - ${p.idade} anos - ${p.telefone}</p>`)
-    .join("");
+    .map((p) => `<p>${p.nome} - ${p.idade} anos - ${p.telefone}</p>`) // para cada paciente gera um parágrafo para exibir as informações 
+    .join(""); // junta nome, idade e telefone em uma única linha 
 }
 
-
+// ao enviar o form a página não vai recarregar 
 document.getElementById("consultaForm")?.addEventListener("submit", (event) => {
   event.preventDefault();
-
+// pega as informações colocadas 
   const pacienteNome = (document.getElementById("consultaPaciente") as HTMLSelectElement).value;
   const medicoEspecialidade = (document.getElementById("consultaMedico") as HTMLSelectElement).value;
   const sala = (document.getElementById("consultaSala") as HTMLSelectElement).value;
@@ -118,28 +119,28 @@ document.getElementById("consultaForm")?.addEventListener("submit", (event) => {
   const horario = (document.getElementById("consultaHorario") as HTMLInputElement).value;
 
   
-  if (!validarData(data)) {
+  if (!validarData(data)) { // gera um alerta se a data não for válida
     alert("Data inválida! Verifique se o dia, mês ou ano estão corretos.");
     return;
   }
-
+// procura na lista de pacientes e medicos para achar o que foi selecionado 
   const paciente = pacientes.find((p) => p.nome === pacienteNome);
   const medico = medicos.find((m) => m.especialidade === medicoEspecialidade);
 
-  if (paciente && medico) {
-    if (verificarConflitoConsulta(data, horario, sala, medico)) {
+  if (paciente && medico) { // verifica se o paciente e o médico existem
+    if (verificarConflitoConsulta(data, horario, sala, medico)) { // verifica um agendamento no mesmo horário, sala e médico
       alert("Conflito de agendamento! Verifique os dados da consulta.");
-      return;
+      return; // se já houver gera um alerta e interrompe
     }
 
-    const novaConsulta = new Consulta(paciente, medico, sala, data, horario);
-    consultas.push(novaConsulta);
+    const novaConsulta = new Consulta(paciente, medico, sala, data, horario); // cria uma nova consulta com as informações 
+    consultas.push(novaConsulta); // adiciona a lista 
 
     
-    const novaSala = new Sala(sala, data, horario, "Ocupada");
-    salas.push(novaSala);
+    const novaSala = new Sala(sala, data, horario, "Ocupada"); // cria um novo objeto para mostrar que a sala estará ocupada 
+    salas.push(novaSala); // adiciona sala a lista 
 
-    
+    // limpa os campos e atualiza a lista de consultas e salas 
     (document.getElementById("consultaPaciente") as HTMLSelectElement).value = "";
     (document.getElementById("consultaMedico") as HTMLSelectElement).value = "";
     (document.getElementById("consultaSala") as HTMLSelectElement).value = "";
@@ -188,42 +189,43 @@ function exibirSalas() {
 
 // RUTHYANNE 
 function atualizarListaProntuarios() {
+  // aqui pegamos o campo de seleção no HTML onde o usuário vai escolher um paciente
   const prontuarioPacienteSelect = document.getElementById(
     "prontuarioPaciente"
   ) as HTMLSelectElement;
-
+// antes de adicionar os pacientes, cria uma opção dizendo "Selecione o Paciente" 
   prontuarioPacienteSelect.innerHTML = `<option value="">Selecione o Paciente</option>`;
-  pacientes.forEach((paciente) => {
+  pacientes.forEach((paciente) => { // para cada paciente na lista, cria uma nova opção 
     const option = document.createElement("option");
-    option.value = paciente.nome;
-    option.textContent = paciente.nome;
-    prontuarioPacienteSelect.appendChild(option);
+    option.value = paciente.nome; // o valor é o nome do paciente (usado internamente)
+    option.textContent = paciente.nome; // o texto é o nome do paciente (mostrado na tela)
+    prontuarioPacienteSelect.appendChild(option); // adiciona as opções criadas no campo de seleção
   });
 }
 
-
+// ao enviar o form a página não vai recarregar 
 document.getElementById("prontuarioForm")?.addEventListener("submit", (event) => {
   event.preventDefault();
-
+// pega o nome escolhido e o texto da área de prontuario 
   const pacienteNome = (document.getElementById("prontuarioPaciente") as HTMLSelectElement).value;
   const textoProntuario = (document.getElementById("prontuarioTexto") as HTMLTextAreaElement).value;
-
+//  procura na lista de pacientes pelo nome que o usuário escolheu
   const paciente = pacientes.find((p) => p.nome === pacienteNome);
   if (!paciente) return;
 
-  
-  let prontuario = prontuarios.find((p) => p.paciente === paciente);
-  if (prontuario) {
+  // procura um prontuário existente para o paciente
+  let prontuario = prontuarios.find((p) => p.paciente === paciente); 
+  if (prontuario) { // se já existir, é atualizado para o novo texto inserido 
     prontuario.historico += `\n${textoProntuario}`;
-  } else {
+  } else { // se não existir, cria-se um novo prontuario e adiciona a lista 
     prontuario = new Prontuario(paciente, textoProntuario);
     prontuarios.push(prontuario);
   }
 
-  
+// limpa os campos de seleção e texto 
   (document.getElementById("prontuarioPaciente") as HTMLSelectElement).value = "";
   (document.getElementById("prontuarioTexto") as HTMLTextAreaElement).value = "";
-
+// atualiza a tela e mostra os prontuários mais recentes
   exibirProntuarios();
 });
 
