@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config(); // Isso vai carregar as variáveis de ambiente do arquivo .env
 import pacienteRouter from "./router/pacienteRouter"
+import medicoRouter from "./router/MedicoRouter"
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json()); // Para manipular requisições JSON
 
 // Configuração das rotas
 app.use('/api/paciente', pacienteRouter);
+app.use('/api/medicos', medicoRouter);
 
 console.log('Rotas carregadas corretamente!');
 
